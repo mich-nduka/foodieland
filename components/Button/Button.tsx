@@ -1,6 +1,13 @@
 import style from "styled-components"
 
-export const Button = style.button`
+type ButtonProps = {
+	$backgroundColor?: string
+	$textColor?: string
+	$width?: string
+	$margin?: string
+}
+
+export const Button = style.button<ButtonProps>`
   display: inline-flex;
   justify-content: center;
   align-items: center;

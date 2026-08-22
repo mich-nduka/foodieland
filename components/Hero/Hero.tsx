@@ -1,6 +1,7 @@
 "use client"
 
 import styled from "styled-components"
+import { QUERIES } from "@/constants"
 import { Button } from "../Button/Button"
 import { PlayCircle } from "react-feather"
 import { Badge, BadgeWrapper, UserBadge } from "../Badges/Badges"
@@ -14,9 +15,9 @@ export const MainHero = () => {
 				<MainHeroTextWrapper>
 					<MainHeroTitle>Spicy delicious chicken wings</MainHeroTitle>
 					<MainSubText>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
-						risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing
-						nec, ultricies sed, dolor.{" "}
+						Crisp outside, tender inside, and glazed in chilli, garlic and
+						honey. One pan, thirty minutes, and ingredients you almost
+						certainly have already.
 					</MainSubText>
 					<BadgeWrapper>
 						<Badge>
@@ -42,7 +43,7 @@ export const MainHero = () => {
 					</MainBadgeWrapper>
 					<FlexWrapper>
 						<UserBadge
-							title={"Maikel"}
+							title={"Dianne Russell"}
 							subtitle={"15 March 2022"}
 						/>
 						<Button
@@ -78,9 +79,10 @@ export const SubHero = () =>{
 						Everyone can be a chef in their own kitchen
 					</SubHeroTitle>
 					<MainSubText>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non
-						risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing
-						nec, ultricies sed, dolor.{" "}
+						Every recipe here is written for an ordinary kitchen. No
+						specialist equipment, no ingredients you can only find in one
+						shop, and steps you can follow with one hand while the other is
+						stirring.
 					</MainSubText>
 					<Button
 						$backgroundColor="#000000"
@@ -111,24 +113,40 @@ const MainHeroSection = styled.div`
 	align-items: center;
 	padding-top: 40px;
 	gap: 40px;
+
+	/* The side rails are pure decoration — they're the first thing to go. */
+	@media ${QUERIES.laptopAndSmaller} {
+		gap: 0;
+	}
 `
 const SubHeroSection = styled(MainHeroSection)`
 	justify-content: center;
-	margin-top: 133px;
+	margin-top: var(--section-gap);
 `
 
 const MainHeroWrapper = styled.div`
 	display: flex;
-	width: 1440px;
-	min-width: 600px;
-	height: clamp(320px, 50vw, 640px);
+	width: 100%;
+	max-width: 1440px;
+	/*
+	  min-height, not height: at wide-but-not-huge widths the headline wraps to
+	  four lines and the centred column grew taller than a fixed 640px box,
+	  spilling up under the sticky header instead of pushing the hero taller.
+	*/
+	min-height: clamp(320px, 50vw, 640px);
 	margin: 0 16px;
+
+	/* Side-by-side text and image stop fitting well below the laptop range. */
+	@media ${QUERIES.laptopAndSmaller} {
+		flex-direction: column;
+		margin: 0 var(--page-gutter);
+	}
 `
 
 const SubHeroWrapper = styled(MainHeroWrapper)`
 	justify-content: center;
 	align-items: center;
-	gap: 60px;
+	gap: clamp(24px, 4vw, 60px);
 `
 
 const MainHeroTextWrapper = styled.div`
@@ -139,8 +157,13 @@ const MainHeroTextWrapper = styled.div`
 	justify-content: center;
 	background-color: #e7fafe;
 	border-radius: 64px 0 0 64px;
-	padding: 50px;
+	padding: clamp(24px, 4vw, 50px);
 	gap: 24px;
+
+	/* Once stacked, the rounded corners belong on the top edge, not the left. */
+	@media ${QUERIES.laptopAndSmaller} {
+		border-radius: clamp(24px, 5vw, 64px) clamp(24px, 5vw, 64px) 0 0;
+	}
 `
 
 const SubHeroTextWrapper = styled(MainHeroTextWrapper)`
@@ -154,13 +177,25 @@ const MainHeroImageWrapper = styled.div`
 	flex: 0 2 660px;
 	border-radius: 0 64px 64px 0;
 	overflow: hidden;
+
+	@media ${QUERIES.laptopAndSmaller} {
+		flex: 0 0 auto;
+		aspect-ratio: 16 / 10;
+		border-radius: 0 0 clamp(24px, 5vw, 64px) clamp(24px, 5vw, 64px);
+	}
 `
 
 const SubHeroImageWrapper = styled(MainHeroImageWrapper)`
 	position: relative;
 	flex: 1;
-	height: 567px;
+	height: clamp(280px, 45vw, 567px);
 	border-radius: 30px;
+
+	@media ${QUERIES.laptopAndSmaller} {
+		width: 100%;
+		aspect-ratio: auto;
+		border-radius: 30px;
+	}
 `
 
 const MainHeroImage = styled.img`
@@ -179,19 +214,47 @@ const SubHeroImage = styled(MainHeroImage)`
 `
 
 const MainHeroTitle = styled.h1`
-	font-size: 84px;
+	font-size: clamp(2.25rem, 1rem + 4.6vw, 5.25rem);
 	font-weight: 700;
-	width: 600px;
+	width: 100%;
+	max-width: 600px;
+	line-height: 1.1;
+	text-wrap: balance;
+
+	/*
+	  Stacked, the badge tucks into the panel's top-right corner rather than
+	  overhanging it, so the headline keeps clear of that corner. The panel is
+	  still wide at these sizes, so reserving the strip costs nothing.
+	*/
+	@media ${QUERIES.laptopAndSmaller} {
+		/*
+		  The 600px cap sizes the headline against the narrow text column of the
+		  side-by-side layout. Stacked, the panel spans the full page width, so
+		  keeping the cap left the headline at 4 lines across 40% of the panel.
+		*/
+		max-width: none;
+		padding-right: clamp(120px, 20vw, 170px);
+	}
+
+	/*
+	  On a phone that same reservation eats nearly half the line box and the
+	  headline collapses into a narrow column. The seal is decorative and
+	  illegible at this size, so it goes and the headline gets the full width.
+	*/
+	@media ${QUERIES.phoneAndSmaller} {
+		padding-right: 0;
+	}
 `
 
 const SubHeroTitle = styled(MainHeroTitle)`
-	font-size: 64px;
+	font-size: clamp(2rem, 1rem + 3.4vw, 4rem);
 `
 
 const MainSubText = styled.p`
 	font-size: 16px;
-	width: 50ch;
-	line-height: 28px;
+	width: 100%;
+	max-width: 50ch;
+	line-height: 1.75;
 	color: rgba(0, 0, 0, 0.6);
 `
 
@@ -201,11 +264,26 @@ const MainBadgeWrapper = styled.div`
 	right: -50px;
 	bottom: 440px;
 	z-index: 1;
+
+	/*
+	  The badge hangs 50px past the panel's right edge. That overhang is what
+	  pushed the page wider than the viewport on small screens, so pull it back
+	  inside once there's no room to spare.
+	*/
+	@media ${QUERIES.laptopAndSmaller} {
+		top: 16px;
+		right: 16px;
+		bottom: auto;
+	}
+
+	@media ${QUERIES.phoneAndSmaller} {
+		display: none;
+	}
 `
 
 const MainBadge = styled.img`
-	width: 150px;
-	height: 150px;
+	width: clamp(80px, 12vw, 150px);
+	height: clamp(80px, 12vw, 150px);
 	object-fit: contain;
 `
 
@@ -214,19 +292,27 @@ const LeftDecor = styled.div`
 	height: clamp(300px, 50vw, 600px);
 	background-color: #e7fafe;
 	border-radius: 0 32px 32px 0;
+
+	@media ${QUERIES.laptopAndSmaller} {
+		display: none;
+	}
 `
 const RightDecor = styled.div`
 	flex-basis: 80px;
 	height: clamp(300px, 50vw, 600px);
 	background-color: #e7fafe;
 	border-radius: 32px 0 0 32px;
+
+	@media ${QUERIES.laptopAndSmaller} {
+		display: none;
+	}
 `
 
 const GradientDecor = styled.div`
 	background: linear-gradient(180deg, rgba(231, 249, 253, 0) 0%, #e7f9fd 100%);
 	position: absolute;
-	width: 651px;
-	height: 500px;
+	width: min(100%, 651px);
+	height: clamp(300px, 40vw, 500px);
 	top: 68px;
 	right: -35px;
 	z-index: -2;
@@ -234,6 +320,9 @@ const GradientDecor = styled.div`
 `
 const FlexWrapper = styled.div`
 	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	justify-content: space-between;
-	margin-top: 100px;
+	gap: 24px;
+	margin-top: clamp(40px, 7vw, 100px);
 `

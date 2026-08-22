@@ -6,6 +6,8 @@ import { FOOTER_ROUTES } from "@/data"
 import { Twitter } from "react-feather"
 import { Instagram } from "react-feather"
 import { Facebook } from "react-feather"
+import { QUERIES } from "@/constants"
+import { SectionText } from "../Typography/Typography"
 
 export const Footer = () => {
 	const currentYear = new Date().getFullYear()
@@ -14,17 +16,14 @@ export const Footer = () => {
 			<ContentWrapper>
 				<LogoWrapper>
 					<Logo>Foodieland</Logo>
-					<p
-						style={{
-							minWidth: "500px",
-							maxWidth: "600px",
-							lineHeight: "28px",
-							color: "grey"
-							// textAlign: "center"
-						}}
+					<SectionText
+						$maxWidth="37.5rem"
+						$margin="0"
+						style={{ color: "grey" }}
 					>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-					</p>
+						Recipes worth cooking twice — written for real kitchens,
+						everyday ingredients and ordinary weeknights.
+					</SectionText>
 				</LogoWrapper>
 				<LinkWrapper>
 					<NavList>
@@ -38,8 +37,8 @@ export const Footer = () => {
 			</ContentWrapper>
 			<FooterBottom>
 				<TextWrapper>
-					<p style={{ marginLeft: "200px", color: "grey" }}>
-						&copy;{currentYear} Flowbase. Powered by{" "}
+					<p style={{ color: "grey", textAlign: "center" }}>
+						&copy;{currentYear} Foodieland. Powered by{" "}
 						<span style={{ color: "#FF7967" }}>Vercel</span>
 					</p>
 				</TextWrapper>
@@ -70,28 +69,41 @@ const FooterWrapper = styled.div`
 	z-index: 100;
 	top: 0;
 	width: 100%;
-	padding: 20px 80px;
+	padding: 20px var(--page-gutter);
 	border-bottom: 1px solid grey;
 	backdrop-filter: blur(20px);
 `
 
 const ContentWrapper = styled.nav`
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
+	gap: 32px;
 	padding-bottom: 48px;
 	border-bottom: 1px solid grey;
+
+	@media ${QUERIES.tabletAndSmaller} {
+		flex-direction: column;
+		align-items: flex-start;
+	}
 `
 
 const FooterBottom = styled.div`
 	font-family: var(--eudoxus-font);
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	align-items: center;
+	gap: 24px;
 	padding: 48px 0;
+
+	@media ${QUERIES.phoneAndSmaller} {
+		flex-direction: column;
+	}
 `
 const LogoWrapper = styled.div`
-	flex: 1;
+	flex: 1 1 300px;
 `
 const Logo = styled.span`
 	width: 110px;
@@ -103,14 +115,19 @@ const Logo = styled.span`
 `
 
 const LinkWrapper = styled.div`
-	flex: 2;
+	flex: 2 1 260px;
 `
 const NavList = styled.ul`
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: flex-end;
 	list-style: none;
 	margin: 0;
 	padding: 0;
+
+	@media ${QUERIES.tabletAndSmaller} {
+		justify-content: flex-start;
+	}
 `
 const NavLink = styled(Link)`
 	display: block;
@@ -124,7 +141,11 @@ const NavLink = styled(Link)`
 `
 
 const NavItem = styled.li`
-	margin-left: 40px;
+	margin-left: clamp(16px, 3vw, 40px);
+
+	@media ${QUERIES.tabletAndSmaller} {
+		margin: 0 clamp(16px, 3vw, 40px) 0 0;
+	}
 
 	&:hover ${NavLink} {
 		transform: translateY(-2px);
@@ -132,11 +153,9 @@ const NavItem = styled.li`
 	}
 `
 const IconWrapper = styled.div`
-	/* flex: 1; */
 	display: flex;
 	justify-content: space-between;
-	gap: 40px;
-	/* justify-self: flex-end; */
+	gap: clamp(20px, 4vw, 40px);
 `
 
 const Icon = styled.div`
@@ -153,8 +172,8 @@ const IconLink = styled(Link)`
 `
 
 const TextWrapper = styled.div`
-	flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+	flex: 1 1 300px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `

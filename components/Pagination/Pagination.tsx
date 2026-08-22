@@ -20,14 +20,15 @@ const FlexWidthWrapper = style.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin: 80px 0 160px 0;
+  margin: clamp(48px, 7vw, 80px) 0 var(--section-gap) 0;
 `
 
 const PaginationWrapper = style.div`
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: clamp(8px, 2vw, 16px);
 
   > *:first-child {
     background-color: #000;
@@ -36,12 +37,12 @@ const PaginationWrapper = style.div`
 `
 const PageButton = style.button`
   background-color: #fff;
-  width: 64px;
-  height: 64px;
+  width: clamp(44px, 9vw, 64px);
+  height: clamp(44px, 9vw, 64px);
   border: #ccc solid 1px;
   border-radius: 16px;
-  padding: 20px;
-  font-size: 18px;
+  padding: 0;
+  font-size: clamp(0.875rem, 0.8rem + 0.4vw, 1.125rem);
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease-in-out;

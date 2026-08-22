@@ -1,7 +1,27 @@
 import Link from "next/link"
 import styled from "styled-components"
+import { QUERIES } from "@/constants"
 
-export const BlogCard = ({ imageSrc, title, subtitle, width, author, authorImage }) => {
+type AuthorMetaDataProps = {
+	author: string
+	authorImage: string
+}
+
+type BlogCardProps = AuthorMetaDataProps & {
+	imageSrc: string
+	title: string
+	subtitle: string
+	width?: string
+}
+
+export const BlogCard = ({
+	imageSrc,
+	title,
+	subtitle,
+	width,
+	author,
+	authorImage
+}: BlogCardProps) => {
 	const linkTitle = title.replaceAll("%20", "-").toLowerCase()
 	console.log(linkTitle)
 	return (
@@ -11,28 +31,19 @@ export const BlogCard = ({ imageSrc, title, subtitle, width, author, authorImage
 			</ImageWrapper>
 			<TextBlock>
 				<TextLink href={`/blog/${title}`}>
-					<h2 style={{ fontSize: "24px", width: "40ch" }}>{title}</h2>
+					<h2 style={{ fontSize: "clamp(1.125rem, 1rem + 0.6vw, 1.5rem)", maxWidth: "40ch" }}>
+						{title}
+					</h2>
 				</TextLink>
 
-				<p
-					style={{
-						fontSize: "14px",
-						color: `rgba(0, 0, 0, 0.6)`,
-						marginTop: "16px",
-						width: "80ch",
-						lineHeight: "1.5",
-						textAlign: "justify"
-					}}
-				>
-					{subtitle}
-				</p>
+				<Subtitle>{subtitle}</Subtitle>
 				<AuthorMetaData author={author} authorImage={authorImage} />
 			</TextBlock>
 		</CardWrapper>
 	)
 }
 
-export const AuthorMetaData = ({ author, authorImage }) => {
+export const AuthorMetaData = ({ author, authorImage }: AuthorMetaDataProps) => {
   return (
 		<UserInfoWrapper>
 			<UserInfoItem>
@@ -50,15 +61,38 @@ export const AuthorMetaData = ({ author, authorImage }) => {
   )
 }
 
+/* Justified text opens rivers of whitespace in a narrow column. */
+const Subtitle = styled.p`
+	font-size: 14px;
+	color: rgba(0, 0, 0, 0.6);
+	margin-top: 16px;
+	max-width: 80ch;
+	line-height: 1.6;
+	text-align: justify;
+
+	@media ${QUERIES.tabletAndSmaller} {
+		text-align: left;
+	}
+`
+
 const CardWrapper = styled.div`
 	display: flex;
-	gap: 40px;
-	/* width: 840px; */
+	gap: clamp(20px, 3vw, 40px);
+
+	@media ${QUERIES.tabletAndSmaller} {
+		flex-direction: column;
+	}
 `
-const ImageWrapper = styled.div`
-	width: ${(props) => props.$width || "100px"};
+const ImageWrapper = styled.div<{ $width?: string }>`
+	width: 100%;
+	max-width: ${(props) => props.$width || "100px"};
+	flex-shrink: 0;
 	border-radius: 10px;
 	overflow: hidden;
+
+	@media ${QUERIES.tabletAndSmaller} {
+		max-width: none;
+	}
 `
 const TextBlock = styled.div`
 	display: flex;
@@ -77,6 +111,7 @@ const Image = styled.img`
 	object-position: center;
 `
 const UserImageWrapper = styled.div`
+	flex: 0 0 auto;
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
@@ -86,7 +121,9 @@ const UserImageWrapper = styled.div`
 	align-items: center;
 `
 const UserInfoWrapper = styled.div`
-	display: inline-flex;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
 	margin-top: 30px;
 
 	> *:first-child {
@@ -95,9 +132,22 @@ const UserInfoWrapper = styled.div`
 	> *:last-child {
 		padding: 0 32px;
 	}
+
+	/* Once these stack, a right-hand divider reads as a stray line. */
+	@media ${QUERIES.phoneAndSmaller} {
+		gap: 8px;
+
+		> *:first-child {
+			border-right: none;
+		}
+		> *:last-child {
+			padding: 0;
+		}
+	}
 `
 const UserInfoItem = styled.div`
-	width: 200px;
+	min-width: 0;
+	flex: 0 1 200px;
 	display: inline-flex;
 	align-items: center;
 	gap: 0 16px;

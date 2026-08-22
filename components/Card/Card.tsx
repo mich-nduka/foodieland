@@ -1,12 +1,35 @@
 "use client"
 
+import Link from "next/link"
 import { Heart } from "react-feather"
 import styled from "styled-components"
 import { Badge, BadgeWrapper } from "../Badges/Badges"
 import { CutleryIcon, ClockIcon } from "../Icons/Icons"
+import { QUERIES } from "@/constants"
 
-const Card = ({ src, title, fill, isAd, background, tag }) => {
-	return (
+type CardProps = {
+	src: string
+	title: string
+	fill: string
+	isAd?: boolean
+	background: boolean
+	tag?: string
+	time?: string
+	/** When set, the whole card links through to the recipe page. */
+	href?: string
+}
+
+const Card = ({
+	src,
+	title,
+	fill,
+	isAd,
+	background,
+	tag,
+	time,
+	href
+}: CardProps) => {
+	const card = (
 		<CardWrapper
 			$isAd={isAd}
 			$background={background}
@@ -32,7 +55,7 @@ const Card = ({ src, title, fill, isAd, background, tag }) => {
 									color: `rgba(0, 0, 0, 0.6)`
 								}}
 							>
-								30 minutes
+								{time}
 							</span>
 						</Badge>
 						<Badge>
@@ -61,9 +84,28 @@ const Card = ({ src, title, fill, isAd, background, tag }) => {
 			)}
 		</CardWrapper>
 	)
+
+	return href ? <CardLink href={href}>{card}</CardLink> : card
 }
 
-const CardWrapper = styled.div`
+const CardLink = styled(Link)`
+	display: block;
+	color: inherit;
+	text-decoration: none;
+	border-radius: 30px;
+	transition: transform 0.2s ease-in-out;
+
+	&:hover {
+		transform: translateY(-4px);
+	}
+
+	&:focus-visible {
+		outline: 2px solid #000000;
+		outline-offset: 4px;
+	}
+`
+
+const CardWrapper = styled.div<{ $isAd?: boolean; $background: boolean }>`
 	display: flex;
 	flex-direction: column;
 	gap: 24px;
@@ -74,19 +116,26 @@ const CardWrapper = styled.div`
 			: `linear-gradient(180deg, rgba(231, 249, 253, 0) 0%, #e7f9fd 100%)`};
 	border-radius: 30px;
 	padding: ${(props) => (props.$isAd ? "0" : "16px")};
-	width: 400px;
-	height: 434px;
+	width: 100%;
+	max-width: 400px;
+	/* Height follows the content instead of clipping it when text wraps. */
+	min-height: 434px;
 `
 
-const CardImageWrapper = styled.div`
-	width: ${(props) => (props.$isAd ? "100%" : "368px")};
-	height: ${(props) => (props.$isAd ? "100%" : "250px")};
+const CardImageWrapper = styled.div<{ $isAd?: boolean }>`
+	width: 100%;
+	${(props) =>
+		props.$isAd
+			? "height: 100%;"
+			: /* Was a fixed 368x250 box; the ratio is what actually matters. */
+				"aspect-ratio: 368 / 250;"}
 	border-radius: ${(props) => (props.$isAd ? "0" : "16px")};
 	overflow: hidden;
 `
 
 const CardImage = styled.img`
 	width: 100%;
+	height: 100%;
 	object-fit: cover;
 	object-position: center;
 `
@@ -94,7 +143,7 @@ const CardImage = styled.img`
 const CardTitle = styled.h3`
 	text-align: left;
 	font-size: 18px;
-	width: 24ch;
+	max-width: 24ch;
 `
 
 const IconWrapper = styled.div`
@@ -104,6 +153,11 @@ const IconWrapper = styled.div`
 	height: 48px;
 	right: 36px;
 	top: 36px;
+
+	@media ${QUERIES.phoneAndSmaller} {
+		right: 28px;
+		top: 28px;
+	}
 	display: flex;
 	justify-content: center;
 	align-items: center;

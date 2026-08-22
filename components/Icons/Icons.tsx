@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+type IconProps = {
+  fill?: string;
+  width?: number | string;
+  height?: number | string;
+};
+
 
 const StyledSVG = styled.svg`
   width: ${props => props.width || '24px'};
@@ -11,7 +17,7 @@ const StyledPath = styled.path`
   fill: currentColor;
 `;
 
-export const CutleryIcon = ({ fill, width, height }) => {
+export const CutleryIcon = ({ fill, width, height }: IconProps) => {
   return (
     <StyledSVG xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill={fill}>
       <StyledPath
@@ -26,7 +32,7 @@ export const CutleryIcon = ({ fill, width, height }) => {
   );
 };
 
-export const ClockIcon = ({ fill, width, height }) => {
+export const ClockIcon = ({ fill, width, height }: IconProps) => {
   return (
 		<StyledSVG
 			xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +53,7 @@ export const ClockIcon = ({ fill, width, height }) => {
   )
 }
 
-export const PrintIcon = ({ fill, width, height }) => {
+export const PrintIcon = ({ fill, width, height }: IconProps) => {
   return (
 		<StyledSVG
 			xmlns="http://www.w3.org/2000/svg"
@@ -81,7 +87,7 @@ export const PrintIcon = ({ fill, width, height }) => {
   )
 };
 
-export const ShareIcon = ({ fill, width, height }) => {
+export const ShareIcon = ({ fill, width, height }: IconProps) => {
   return (
 		<StyledSVG
 			xmlns="http://www.w3.org/2000/svg"

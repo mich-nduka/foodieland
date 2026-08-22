@@ -1,10 +1,27 @@
 import styled from "styled-components"
+import { QUERIES } from "@/constants"
 
-export const UserBadge = ({ title, subtitle }) => {
+type UserBadgeProps = {
+	title: string
+	subtitle: string
+	image?: string
+}
+
+type ImageBadgeProps = {
+	title: string
+	subtitle: string
+	image: string
+	width?: string
+}
+
+export const UserBadge = ({ title, subtitle, image }: UserBadgeProps) => {
 	return (
 		<BadgeWrapper>
 			<UserImageWrapper>
-				<UserImage src="/images/user.png" />
+				<UserImage
+					src={image || "/images/user.png"}
+					alt={title}
+				/>
 			</UserImageWrapper>
 			<TextBlock>
 				<h2 style={{ fontSize: "18px" }}>{title}</h2>
@@ -16,7 +33,7 @@ export const UserBadge = ({ title, subtitle }) => {
 	)
 }
 
-export const ImageBadge = ({ title, subtitle, image, width }) => {
+export const ImageBadge = ({ title, subtitle, image, width }: ImageBadgeProps) => {
 	return (
 		<BadgeWrapper>
 			<ImageWrapper $width={width}>
@@ -26,7 +43,7 @@ export const ImageBadge = ({ title, subtitle, image, width }) => {
 				/>
 			</ImageWrapper>
 			<TextWrapper>
-				<h2 style={{ fontSize: "18px", width: "16ch" }}>{title}</h2>
+				<h2 style={{ fontSize: "18px" }}>{title}</h2>
 				<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)`, marginTop: "16px" }}>
 					{subtitle}
 				</p>
@@ -37,6 +54,7 @@ export const ImageBadge = ({ title, subtitle, image, width }) => {
 
 export const BadgeWrapper = styled.div`
 	display: flex;
+	flex-wrap: wrap;
 	gap: 16px;
 `
 
@@ -50,6 +68,7 @@ export const Badge = styled.div`
 `
 
 const UserImageWrapper = styled.div`
+	flex: 0 0 auto;
 	width: 70px;
 	height: 70px;
 	border-radius: 50%;
@@ -59,10 +78,21 @@ const UserImageWrapper = styled.div`
 	align-items: center;
 `
 
-export const ImageWrapper = styled.div`
-	width: ${props => props.$width || "100px"};
+export const ImageWrapper = styled.div<{ $width?: string }>`
+	/* $width becomes an upper bound so the badge can shrink on narrow screens. */
+	width: 100%;
+	max-width: ${props => props.$width || "100px"};
+	flex-shrink: 0;
 	border-radius: 10px;
 	overflow: hidden;
+
+	/*
+	  A fixed 180px thumbnail is over half the width of a phone-width sidebar,
+	  leaving too little for the title beside it.
+	*/
+	@media ${QUERIES.phoneAndSmaller} {
+		max-width: min(${props => props.$width || "100px"}, 40%);
+	}
 `
 
 const Image = styled.img`
@@ -73,6 +103,7 @@ const Image = styled.img`
 
 export const IconWrapper = styled.div`
 	border-radius: 0;
+	flex: 0 0 auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -91,8 +122,20 @@ export const TextBlock = styled.div`
 	flex-direction: column;
 	gap: 8px;
 	justify-content: center;
-	flex-basis: 100%;
+	/*
+	  Was flex-basis: 100%, which is harmless in a nowrap row but drops the
+	  text onto its own line the moment BadgeWrapper is allowed to wrap.
+	  Growing from a zero basis fills the same space without forcing a break.
+	*/
+	flex: 1 1 0;
+	min-width: 0;
 `
 const TextWrapper = styled(TextBlock)`
-  flex-basis: 200px;
+	/*
+	  Grows from a zero basis rather than a 200px one. Flex line-breaking uses
+	  the *hypothetical* main size, so a 200px basis pushed this onto its own row
+	  next to a 180px thumbnail in any container under ~400px — the text ended up
+	  below the image with the row's right half empty.
+	*/
+	flex: 1 1 0;
 `

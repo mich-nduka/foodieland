@@ -1,3 +1,5 @@
+import type { Category } from "@/types"
+
 export const COLORS = {
   white: '0deg 0% 100%',
   gray: {
@@ -23,10 +25,16 @@ export const BREAKPOINTS = {
 	laptop: 1300
 }
 
+/**
+ * All of these are `max-width` queries, so each one matches the named device
+ * *and everything narrower* — hence "…AndSmaller". Used as:
+ *
+ *     @media ${QUERIES.tabletAndSmaller} { ... }
+ */
 export const QUERIES = {
-	phoneAndLarger: `(max-width: ${BREAKPOINTS.phone / 16}rem)`,
-	tabletAndLarger: `(max-width: ${BREAKPOINTS.tablet / 16}rem)`,
-	laptopAndLarger: `(max-width: ${BREAKPOINTS.laptop / 16}rem)`
+	phoneAndSmaller: `(max-width: ${BREAKPOINTS.phone / 16}rem)`,
+	tabletAndSmaller: `(max-width: ${BREAKPOINTS.tablet / 16}rem)`,
+	laptopAndSmaller: `(max-width: ${BREAKPOINTS.laptop / 16}rem)`
 }
 
 
@@ -36,7 +44,7 @@ export const THEME = {
   WEIGHTS
 }
 
-export const INFO = [
+export const INFO: Category[] = [
 	{
 		gradient: `linear-gradient(180deg,
     rgba(112, 130, 70, 0) 0%,

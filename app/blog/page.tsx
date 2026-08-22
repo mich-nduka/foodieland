@@ -7,7 +7,7 @@ import {
 	MainArea,
 	MainSection,
 	Title
-} from "../recipes/page"
+} from "@/components/Layout/Layout"
 import {
 	EmailBox,
 	EmailBoxWrapper,
@@ -19,19 +19,28 @@ import {
 import { Button } from "@/components/Button/Button"
 import { ImageBadge } from "@/components/Badges/Badges"
 import { BlogCard } from "@/components/Card/BlogCard"
-import { BLOG_POSTS } from "@/data"
+import { BLOG_POSTS, NEWSLETTER_COPY, SIDEBAR_RECIPES } from "@/data"
 import { Pagination } from "@/components/Pagination/Pagination"
+import { QUERIES } from "@/constants"
+import {
+	SectionHeading,
+	SectionText
+} from "@/components/Typography/Typography"
 
 function Blog() {
 	return (
 		<BlogSection>
 			<BlogTextWrapper>
 				<Title>Blog & Article</Title>
-				<p style={{ marginTop: "40px", color: "#ccc" }}>
-					Officia et elit pariatur consectetur aliqua laborum nulla adipisicing
-					duis ad occaecat. Consequat velit non pariatur id ex enim occaecat ut
-					eu incididunt eu deserunt.
-				</p>
+				<SectionText
+					$align="center"
+					$margin="40px auto 0"
+					style={{ color: "#ccc" }}
+				>
+					Interviews, technique guides and notes from our test kitchen. Longer
+					reads for when you want to know why a recipe works, not just how to
+					follow it.
+				</SectionText>
 				<SearchBoxWrapper>
 					<EmailBox
 						type="text"
@@ -48,41 +57,30 @@ function Blog() {
 			</BlogTextWrapper>
 			<MainSection>
 				<MainArea>
-					{BLOG_POSTS.map(({ title, blogSmallImage, author, authorImage }) => (
-						<BlogCard
-							key={title}
-							imageSrc={blogSmallImage}
-							// alt="image-badge"
-							title={title}
-							subtitle="Lorem ipsum dolor sit amet, consectetuipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqut enim. Lorem ipsum dolor sit amet, consectetuipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqut enim "
-							width={"400px"}
-							author={author}
-							authorImage={authorImage}
-						/>
-					))}
+					{BLOG_POSTS.map(
+						({ title, blogSmallImage, author, authorImage, excerpt }) => (
+							<BlogCard
+								key={title}
+								imageSrc={blogSmallImage}
+								title={title}
+								subtitle={excerpt}
+								width={"400px"}
+								author={author}
+								authorImage={authorImage}
+							/>
+						)
+					)}
 				</MainArea>
 				<SideBox>
-					<ImageBadge
-						image="/images/chicken-meatballs-1.png"
-						alt="image-badge"
-						title="Chicken Meatball with Creamy Chees..."
-						subtitle="By Andreas Paula"
-						width={"180px"}
-					/>
-					<ImageBadge
-						image="/images/creamy-chicken.png"
-						alt="image-badge"
-						title="The Creamiest Creamy Chicken an..."
-						subtitle="By Andreas Paula"
-						width={"180px"}
-					/>
-					<ImageBadge
-						image="/images/pot-chicken-1.png"
-						alt="image-badge"
-						title="The Best Easy One Pot Chicken and Rice"
-						subtitle="By Andreas Paula"
-						width={"180px"}
-					/>
+					{SIDEBAR_RECIPES.map(({ title, image, author }) => (
+						<ImageBadge
+							key={title}
+							image={image}
+							title={title}
+							subtitle={`By ${author}`}
+							width={"180px"}
+						/>
+					))}
 					<AdWrapper>
 						<Ad
 							src="/images/ad-banner.png"
@@ -93,19 +91,13 @@ function Blog() {
 			</MainSection>
 			<Pagination />
 			<InboxSection>
-				<h2 style={{ fontSize: "48px" }}>Deliciousness to your inbox</h2>
-				<p
-					style={{
-						minWidth: "500px",
-						maxWidth: "600px",
-						lineHeight: "28px",
-						textAlign: "center",
-						color: `rgba(0, 0, 0, 0.6)`
-					}}
+				<SectionHeading>Deliciousness to your inbox</SectionHeading>
+				<SectionText
+					$maxWidth="37.5rem"
+					$align="center"
 				>
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor,
-					sapien vel tincidunt bibendum, velit turpis tincidunt velit.{" "}
-				</p>
+					{NEWSLETTER_COPY}
+				</SectionText>
 				<EmailBoxWrapper>
 					<EmailBox
 						type="email"
@@ -131,12 +123,13 @@ function Blog() {
 }
 
 const BlogSection = styled.section`
-	margin: 0 80px;
+	margin: 0 var(--page-gutter);
 `
 const SearchBoxWrapper = styled(EmailBoxWrapper)`
 	border: #ccc 1px solid;
 	margin-top: 80px;
-	width: 700px;
+	width: 100%;
+	max-width: 700px;
 `
 const BlogTextWrapper = styled.div`
 	display: flex;
@@ -145,6 +138,10 @@ const BlogTextWrapper = styled.div`
 	margin-top: 80px;
 `
 
-const SideBox = styled(IngredientsSideBox)``
+const SideBox = styled(IngredientsSideBox)`
+	@media ${QUERIES.tabletAndSmaller} {
+		align-items: stretch;
+	}
+`
 
 export default Blog
