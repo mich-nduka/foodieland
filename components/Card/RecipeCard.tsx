@@ -1,150 +1,53 @@
 "use client"
 
-import styled from "styled-components"
-import { BadgeWrapper, IconWrapper, TextBlock, UserBadge } from "../Badges/Badges"
-import { ClockIcon, CutleryIcon } from "../Icons/Icons"
-import { QUERIES } from "@/constants"
+import { Clock, UtensilsCrossed } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type RecipeCardProps = {
-	author: string
-	authorImage: string
-	date: string
-	prepTime: string
-	cookTime: string
-	tag: string
+  author: string
+  authorImage: string
+  date: string
+  prepTime: string
+  cookTime: string
+  tag: string
 }
 
-/** The meta strip above a recipe: who wrote it, when, and how long it takes. */
-export const RecipeCard = ({
-	author,
-	authorImage,
-	date,
-	prepTime,
-	cookTime,
-	tag
-}: RecipeCardProps) => {
-	return (
-		<FlexWrapper>
-			<FlexItem>
-				<UserBadge
-					title={author}
-					subtitle={date}
-					image={authorImage}
-				/>
-			</FlexItem>
-			<FlexItem>
-				<BadgeWrapper>
-					<IconWrapper>
-						<ClockIcon
-							width={24}
-							height={24}
-						/>
-					</IconWrapper>
-					<TextBlock>
-						<h2 style={{ fontSize: "12px", fontWeight: "bold" }}>
-							PREP TIME
-						</h2>
-						<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)` }}>
-							{prepTime}
-						</p>
-					</TextBlock>
-				</BadgeWrapper>
-			</FlexItem>
-			<FlexItem>
-				<BadgeWrapper>
-					<IconWrapper>
-						<ClockIcon
-							width={24}
-							height={24}
-						/>
-					</IconWrapper>
-					<TextBlock>
-						<h2 style={{ fontSize: "12px", fontWeight: "bold" }}>
-							COOK TIME
-						</h2>
-						<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)` }}>
-							{cookTime}
-						</p>
-					</TextBlock>
-				</BadgeWrapper>
-			</FlexItem>
-			<FlexItem>
-				<BadgeWrapper>
-					<IconWrapper>
-						<CutleryIcon
-							width={24}
-							height={24}
-						/>
-					</IconWrapper>
-					<TextBlock>
-						<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)` }}>
-							{tag}
-						</p>
-					</TextBlock>
-				</BadgeWrapper>
-			</FlexItem>
-		</FlexWrapper>
-	)
+export const RecipeCard = ({ author, authorImage, date, prepTime, cookTime, tag }: RecipeCardProps) => {
+  const items = [
+    {
+      label: null,
+      value: author,
+      sub: date,
+      avatar: authorImage,
+    },
+    { label: "PREP TIME", value: prepTime },
+    { label: "COOK TIME", value: cookTime },
+    { label: null, value: tag },
+  ]
+  return (
+    <dl className="grid w-full max-w-4xl grid-cols-1 gap-0 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((item, i) => (
+        <div
+          key={i}
+          className="flex items-center gap-3 border-line py-4 sm:px-6 sm:first:pl-0 lg:justify-center lg:border-l lg:first:border-l-0 lg:first:pl-0 lg:first:justify-start max-lg:odd:border-r-0 max-sm:border-b max-sm:last:border-b-0 sm:max-lg:odd:border-r sm:max-lg:[&:nth-child(-n+2)]:border-b"
+        >
+          {item.avatar ? (
+            <Avatar className="size-12">
+              <AvatarImage src={item.avatar} alt={item.value} />
+              <AvatarFallback>{item.value.slice(0, 1)}</AvatarFallback>
+            </Avatar>
+          ) : (
+            <span aria-hidden className="flex size-12 items-center justify-center rounded-full border border-line bg-cream text-sm">
+              {item.label ? <Clock className="size-5" /> : <UtensilsCrossed className="size-5" />}
+            </span>
+          )}
+          <div>
+            {item.label && <dt className="text-xs font-bold tracking-wide">{item.label}</dt>}
+            <dd className="text-sm font-medium">{item.value}</dd>
+            {item.sub && <dd className="text-sm text-muted-classic">{item.sub}</dd>}
+          </div>
+        </div>
+      ))}
+    </dl>
+  )
 }
-
-const FlexWrapper = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	gap: 24px 0;
-	width: 100%;
-	max-width: 1024px;
-
-	> *:not(:last-child) {
-		border-right: 1px solid #ccc;
-	}
-
-	> :nth-child(2),
-	> :nth-child(3),
-	> :nth-child(4) {
-		justify-content: center;
-	}
-
-	/* Two per row: a divider only belongs between the pair, not after it. */
-	@media ${QUERIES.tabletAndSmaller} {
-		> :nth-child(2),
-		> :nth-child(3),
-		> :nth-child(4) {
-			justify-content: flex-start;
-		}
-		> *:nth-child(even) {
-			border-right: none;
-		}
-	}
-
-	/* One per row: the vertical dividers become horizontal rules. */
-	@media ${QUERIES.phoneAndSmaller} {
-		gap: 0;
-
-		> *:not(:last-child) {
-			border-right: none;
-			border-bottom: 1px solid #ccc;
-		}
-		> * {
-			padding: 16px 0;
-		}
-	}
-`
-
-/*
- * Track sizing lives here rather than on `FlexWrapper > *`. That selector ties
- * with this component's own class on specificity, and styled-components emits
- * this block later, so the child rule would silently win the tie.
- */
-const FlexItem = styled.div`
-	flex: 1;
-	min-width: 0;
-	display: flex;
-
-	@media ${QUERIES.tabletAndSmaller} {
-		flex: 1 1 50%;
-	}
-
-	@media ${QUERIES.phoneAndSmaller} {
-		flex: 1 1 100%;
-	}
-`

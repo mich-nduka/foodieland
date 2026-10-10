@@ -1,147 +1,63 @@
-"use client"
-import styled from "styled-components"
-import {
-	Ad,
-	AdWrapper,
-	IngredientsSideBox,
-	MainArea,
-	MainSection,
-	Title
-} from "@/components/Layout/Layout"
-import {
-	EmailBox,
-	EmailBoxWrapper,
-	InboxImage,
-	InboxImageOneWrapper,
-	InboxImageTwoWrapper,
-	InboxSection
-} from "../page"
-import { Button } from "@/components/Button/Button"
 import { ImageBadge } from "@/components/Badges/Badges"
 import { BlogCard } from "@/components/Card/BlogCard"
-import { BLOG_POSTS, NEWSLETTER_COPY, SIDEBAR_RECIPES } from "@/data"
+import { Ad, AdWrapper, IngredientsSideBox, MainArea, MainSection, PageWrapper, Title } from "@/components/Layout/Layout"
+import { Newsletter } from "@/components/newsletter"
 import { Pagination } from "@/components/Pagination/Pagination"
-import { QUERIES } from "@/constants"
-import {
-	SectionHeading,
-	SectionText
-} from "@/components/Typography/Typography"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { SectionText } from "@/components/typography"
+import { BLOG_POSTS, NEWSLETTER_COPY, SIDEBAR_RECIPES } from "@/data"
 
 function Blog() {
-	return (
-		<BlogSection>
-			<BlogTextWrapper>
-				<Title>Blog & Article</Title>
-				<SectionText
-					$align="center"
-					$margin="40px auto 0"
-					style={{ color: "#ccc" }}
-				>
-					Interviews, technique guides and notes from our test kitchen. Longer
-					reads for when you want to know why a recipe works, not just how to
-					follow it.
-				</SectionText>
-				<SearchBoxWrapper>
-					<EmailBox
-						type="text"
-						placeholder="Search article, news or recipe..."
-					/>
-					<Button
-						$backgroundColor="#000000"
-						$textColor="#ffffff"
-						$width="160px"
-					>
-						Search
-					</Button>
-				</SearchBoxWrapper>
-			</BlogTextWrapper>
-			<MainSection>
-				<MainArea>
-					{BLOG_POSTS.map(
-						({ title, blogSmallImage, author, authorImage, excerpt }) => (
-							<BlogCard
-								key={title}
-								imageSrc={blogSmallImage}
-								title={title}
-								subtitle={excerpt}
-								width={"400px"}
-								author={author}
-								authorImage={authorImage}
-							/>
-						)
-					)}
-				</MainArea>
-				<SideBox>
-					{SIDEBAR_RECIPES.map(({ title, image, author }) => (
-						<ImageBadge
-							key={title}
-							image={image}
-							title={title}
-							subtitle={`By ${author}`}
-							width={"180px"}
-						/>
-					))}
-					<AdWrapper>
-						<Ad
-							src="/images/ad-banner.png"
-							alt="ad"
-						/>
-					</AdWrapper>
-				</SideBox>
-			</MainSection>
-			<Pagination />
-			<InboxSection>
-				<SectionHeading>Deliciousness to your inbox</SectionHeading>
-				<SectionText
-					$maxWidth="37.5rem"
-					$align="center"
-				>
-					{NEWSLETTER_COPY}
-				</SectionText>
-				<EmailBoxWrapper>
-					<EmailBox
-						type="email"
-						placeholder="Your email address..."
-					/>
-					<Button
-						$backgroundColor="#000000"
-						$textColor="#ffffff"
-						$width="160px"
-					>
-						Subscribe
-					</Button>
-				</EmailBoxWrapper>
-				<InboxImageOneWrapper>
-					<InboxImage src="/images/kisspng-salad-salad-fresh-food-healthylife-vegetables-vegetarian-5d42e3a7cb8543 1.png" />
-				</InboxImageOneWrapper>
-				<InboxImageTwoWrapper>
-					<InboxImage src="/images/Photo-plate.png" />
-				</InboxImageTwoWrapper>
-			</InboxSection>
-		</BlogSection>
-	)
+  return (
+    <PageWrapper>
+      <div className="mt-16 flex flex-col items-center">
+        <Title>Blog &amp; Article</Title>
+        <SectionText className="text-center">
+          Interviews, technique guides and notes from our test kitchen. Longer reads for when you want to know why a
+          recipe works, not just how to follow it.
+        </SectionText>
+        <form
+          className="mt-10 flex w-full max-w-2xl flex-col gap-2 rounded-3xl border border-line bg-white p-2 sm:flex-row sm:items-center sm:rounded-full sm:pl-5"
+        >
+          <label htmlFor="blog-search" className="sr-only">
+            Search articles
+          </label>
+          <Input id="blog-search" type="text" placeholder="Search article, news or recipe..." className="border-0 bg-transparent shadow-none focus-visible:ring-0" />
+          <Button type="submit" className="shrink-0">
+            Search
+          </Button>
+        </form>
+      </div>
+      <MainSection>
+        <MainArea>
+          {BLOG_POSTS.map(({ title, blogSmallImage, author, authorImage, excerpt }) => (
+            <BlogCard
+              key={title}
+              imageSrc={blogSmallImage}
+              title={title}
+              subtitle={excerpt}
+              width="400px"
+              author={author}
+              authorImage={authorImage}
+            />
+          ))}
+        </MainArea>
+        <IngredientsSideBox>
+          {SIDEBAR_RECIPES.map(({ title, image, author }) => (
+            <ImageBadge key={title} image={image} title={title} subtitle={`By ${author}`} width="180px" />
+          ))}
+          <AdWrapper>
+            <Ad src="/images/ad-banner.png" alt="ad" />
+          </AdWrapper>
+        </IngredientsSideBox>
+      </MainSection>
+      <Pagination />
+      <div className="my-8">
+        <Newsletter copy={NEWSLETTER_COPY} />
+      </div>
+    </PageWrapper>
+  )
 }
-
-const BlogSection = styled.section`
-	margin: 0 var(--page-gutter);
-`
-const SearchBoxWrapper = styled(EmailBoxWrapper)`
-	border: #ccc 1px solid;
-	margin-top: 80px;
-	width: 100%;
-	max-width: 700px;
-`
-const BlogTextWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-top: 80px;
-`
-
-const SideBox = styled(IngredientsSideBox)`
-	@media ${QUERIES.tabletAndSmaller} {
-		align-items: stretch;
-	}
-`
 
 export default Blog

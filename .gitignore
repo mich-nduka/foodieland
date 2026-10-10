@@ -43,3 +43,6 @@ next-env.d.ts
 #skills
 /.agents
 /.claude
+
+# playwright mcp test artifacts
+/.playwright-mcp

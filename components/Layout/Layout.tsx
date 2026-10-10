@@ -1,84 +1,37 @@
-"use client"
+import { cn } from "@/lib/utils"
 
-import styled from "styled-components"
-import { QUERIES } from "@/constants"
+export function PageWrapper({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("mx-auto w-full max-w-7xl px-6 md:px-10", className)}>{children}</div>
+}
 
-/*
- * Shared page scaffolding. These previously lived in `app/recipes/page.tsx` and
- * were imported across the blog, blog post and contact pages — which meant
- * those pages pulled in a route module just to reach a styled component, and
- * the recipes route could not be restructured without breaking them.
- */
+export function FullBleed({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("my-16", className)}>{children}</div>
+}
 
-export const PageWrapper = styled.div`
-	margin: 0 var(--page-gutter);
-`
+export function Title({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <h1 className={cn("font-display text-balance text-4xl leading-tight font-semibold tracking-tight md:text-6xl", className)}>{children}</h1>
+}
 
-/* Cancels the page gutter so a block runs edge to edge. */
-export const FullBleed = styled.div`
-	margin: 0 calc(-1 * var(--page-gutter)) var(--section-gap);
-`
+export function MainSection({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <section className={cn("mt-12 flex flex-col gap-10 lg:flex-row", className)}>{children}</section>
+}
 
-export const Title = styled.h1`
-	font-size: clamp(2rem, 1rem + 3.4vw, 4rem);
-	line-height: 1.15;
-	text-wrap: balance;
-`
+export function MainArea({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("flex min-w-0 flex-1 flex-col gap-8", className)}>{children}</div>
+}
 
-export const MainSection = styled.section`
-	display: flex;
-	margin-top: 80px;
-	gap: 40px;
+export function InfoArea({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("flex min-w-0 flex-1 flex-col justify-end gap-6", className)}>{children}</div>
+}
 
-	@media ${QUERIES.tabletAndSmaller} {
-		flex-direction: column;
-	}
-`
+export function IngredientsSideBox({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("flex min-w-0 flex-1 flex-col items-stretch gap-6 lg:items-center", className)}>{children}</div>
+}
 
-export const MainArea = styled.div`
-	flex: 2;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 50px;
-`
+export function AdWrapper({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("mt-10 w-full max-w-md", className)}>{children}</div>
+}
 
-export const InfoArea = styled.div`
-	flex: 1;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-end;
-	gap: 24px;
-`
-
-export const IngredientsSideBox = styled.div`
-	flex: 1;
-	min-width: 0;
-	border-radius: 10px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 24px;
-
-	/*
-	  Must stay last: a media query adds no specificity, so this only beats the
-	  align-items above it by source order.
-	  Stacked, the sidebar spans the page and centring leaves its cards ragged.
-	*/
-	@media ${QUERIES.tabletAndSmaller} {
-		align-items: stretch;
-	}
-`
-
-export const AdWrapper = styled.div`
-	width: 100%;
-	max-width: 400px;
-	margin-top: 80px;
-`
-
-export const Ad = styled.img`
-	width: 100%;
-	object-fit: cover;
-	object-position: center;
-`
+export function Ad({ className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) {
+  return <img className={cn("w-full rounded-2xl border border-line object-cover", className)} {...props} alt={props.alt ?? "Advertisement"} />
+}

@@ -1,141 +1,56 @@
-import styled from "styled-components"
-import { QUERIES } from "@/constants"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 
-type UserBadgeProps = {
-	title: string
-	subtitle: string
-	image?: string
+export function BadgeWrapper({ className, children }: { className?: string; children: React.ReactNode }) {
+  return <div className={cn("flex flex-wrap gap-2", className)}>{children}</div>
 }
 
-type ImageBadgeProps = {
-	title: string
-	subtitle: string
-	image: string
-	width?: string
+export { Badge }
+
+export function UserBadge({ title, subtitle, image }: { title: string; subtitle: string; image?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <Avatar className="size-14">
+        <AvatarImage src={image || "/images/user.png"} alt={title} />
+        <AvatarFallback>{title.slice(0, 1)}</AvatarFallback>
+      </Avatar>
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+        <p className="text-[15px] font-semibold">{title}</p>
+        <p className="text-sm text-muted-classic">{subtitle}</p>
+      </div>
+    </div>
+  )
 }
 
-export const UserBadge = ({ title, subtitle, image }: UserBadgeProps) => {
-	return (
-		<BadgeWrapper>
-			<UserImageWrapper>
-				<UserImage
-					src={image || "/images/user.png"}
-					alt={title}
-				/>
-			</UserImageWrapper>
-			<TextBlock>
-				<h2 style={{ fontSize: "18px" }}>{title}</h2>
-				<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)` }}>
-					{subtitle}
-				</p>
-			</TextBlock>
-		</BadgeWrapper>
-	)
+export function ImageBadge({
+  title,
+  subtitle,
+  image,
+  width,
+}: {
+  title: string
+  subtitle: string
+  image: string
+  width?: string
+}) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="w-full max-w-28 shrink-0 overflow-hidden rounded-xl border border-line sm:max-w-44" style={width ? { maxWidth: width } : undefined}>
+        <img src={image} alt={title} className="aspect-square w-full object-cover" />
+      </div>
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-1">
+        <p className="font-display text-lg leading-snug font-semibold">{title}</p>
+        <p className="mt-1 text-sm text-muted-classic">{subtitle}</p>
+      </div>
+    </div>
+  )
 }
 
-export const ImageBadge = ({ title, subtitle, image, width }: ImageBadgeProps) => {
-	return (
-		<BadgeWrapper>
-			<ImageWrapper $width={width}>
-				<Image
-					src={image}
-					alt={title}
-				/>
-			</ImageWrapper>
-			<TextWrapper>
-				<h2 style={{ fontSize: "18px" }}>{title}</h2>
-				<p style={{ fontSize: "14px", color: `rgba(0, 0, 0, 0.6)`, marginTop: "16px" }}>
-					{subtitle}
-				</p>
-			</TextWrapper>
-		</BadgeWrapper>
-	)
+export function IconWrapper({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <div className={cn("flex size-12 shrink-0 items-center justify-center rounded-full border border-line bg-cream", className)}>
+      {children}
+    </div>
+  )
 }
-
-export const BadgeWrapper = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	gap: 16px;
-`
-
-export const Badge = styled.div`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background: rgba(0, 0, 0, 0.05);
-	border-radius: 30px;
-	padding: 8px 16px;
-`
-
-const UserImageWrapper = styled.div`
-	flex: 0 0 auto;
-	width: 70px;
-	height: 70px;
-	border-radius: 50%;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-`
-
-export const ImageWrapper = styled.div<{ $width?: string }>`
-	/* $width becomes an upper bound so the badge can shrink on narrow screens. */
-	width: 100%;
-	max-width: ${props => props.$width || "100px"};
-	flex-shrink: 0;
-	border-radius: 10px;
-	overflow: hidden;
-
-	/*
-	  A fixed 180px thumbnail is over half the width of a phone-width sidebar,
-	  leaving too little for the title beside it.
-	*/
-	@media ${QUERIES.phoneAndSmaller} {
-		max-width: min(${props => props.$width || "100px"}, 40%);
-	}
-`
-
-const Image = styled.img`
-	width: 100%;
-	object-fit: cover;
-	object-position: center;
-`
-
-export const IconWrapper = styled.div`
-	border-radius: 0;
-	flex: 0 0 auto;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 50px;
-	height: 50px;
-`
-
-const UserImage = styled.img`
-	width: 100%;
-	object-fit: cover;
-	object-position: center;
-`
-
-export const TextBlock = styled.div`
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	justify-content: center;
-	/*
-	  Was flex-basis: 100%, which is harmless in a nowrap row but drops the
-	  text onto its own line the moment BadgeWrapper is allowed to wrap.
-	  Growing from a zero basis fills the same space without forcing a break.
-	*/
-	flex: 1 1 0;
-	min-width: 0;
-`
-const TextWrapper = styled(TextBlock)`
-	/*
-	  Grows from a zero basis rather than a 200px one. Flex line-breaking uses
-	  the *hypothetical* main size, so a 200px basis pushed this onto its own row
-	  next to a 180px thumbnail in any container under ~400px — the text ended up
-	  below the image with the row's right half empty.
-	*/
-	flex: 1 1 0;
-`
